@@ -18,9 +18,9 @@ jobs:
           version: 0.16.0
 
       - name: Setup Bazel
-        uses: bazel-contrib/setup-bazel@0.8.0
+        uses: bazel-contrib/setup-bazel@0.19.0
         with:
-          bazelisk-version: latest
+          bazelisk-version: 1.x
 
       - name: Check Bazel formatting
         run: buildifier --lint=warn --mode=check -r .
