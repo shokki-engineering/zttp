@@ -22,6 +22,12 @@ jobs:
         with:
           bazelisk-version: 1.x
 
+      - name: Install buildifier
+        run: |
+          curl -sSL -o /usr/local/bin/buildifier \
+            https://github.com/bazelbuild/buildtools/releases/download/v8.5.1/buildifier-linux-amd64
+          chmod +x /usr/local/bin/buildifier
+
       - name: Check Bazel formatting
         run: buildifier --lint=warn --mode=check -r .
 
