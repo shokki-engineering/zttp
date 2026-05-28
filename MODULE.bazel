@@ -2,7 +2,10 @@
 Http framework for Zig
 """
 
-module(name = "zhttp", version = "1.0.0")
+module(
+    name = "zhttp",
+    version = "1.0.0",
+)
 
 bazel_dep(name = "rules_zig", version = "0.14.0")
 
