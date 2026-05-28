@@ -1,0 +1,27 @@
+name: Bazel CI
+
+on:
+  push:
+    branches: [main, feature/**]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.8.0
+        with:
+          bazelisk-version: latest
+
+      - name: Check Bazel formatting
+        run: buildifier --lint=warn --mode=check -r .
+
+      - name: Build with Bazel
+        run: bazel build //...
+
+      - name: Test with Bazel
+        run: bazel test //...

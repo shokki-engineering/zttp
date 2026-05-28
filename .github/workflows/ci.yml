@@ -1,4 +1,4 @@
-name: CI
+name: Zig CI
 
 on:
   push:
@@ -17,20 +17,6 @@ jobs:
         with:
           version: 0.16.0
 
-      - name: Setup Bazel
-        uses: bazel-contrib/setup-bazel@0.19.0
-        with:
-          bazelisk-version: 1.x
-
-      - name: Install buildifier
-        run: |
-          curl -sSL -o /usr/local/bin/buildifier \
-            https://github.com/bazelbuild/buildtools/releases/download/v8.5.1/buildifier-linux-amd64
-          chmod +x /usr/local/bin/buildifier
-
-      - name: Check Bazel formatting
-        run: buildifier --lint=warn --mode=check -r .
-
       - name: Check formatting
         run: zig fmt --check src/
 
@@ -39,9 +25,3 @@ jobs:
 
       - name: Run tests
         run: zig build test
-
-      - name: Build with Bazel
-        run: bazel build //...
-
-      - name: Test with Bazel
-        run: bazel test //...
