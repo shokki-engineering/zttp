@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, feature/** ]
+    branches: [main, feature/**]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test:
@@ -15,7 +15,15 @@ jobs:
       - name: Setup Zig
         uses: mlugg/setup-zig@v1
         with:
-          version: master
+          version: 0.16.0
+
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.8.0
+        with:
+          bazelisk-version: latest
+
+      - name: Check Bazel formatting
+        run: buildifier --lint=warn --mode=check -r .
 
       - name: Check formatting
         run: zig fmt --check src/
@@ -25,3 +33,9 @@ jobs:
 
       - name: Run tests
         run: zig build test
+
+      - name: Build with Bazel
+        run: bazel build //...
+
+      - name: Test with Bazel
+        run: bazel test //...
