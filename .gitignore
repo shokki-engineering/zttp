@@ -5,3 +5,6 @@ zig-cache/
 
 # Zig package manager dependencies
 zig-pkg/
+
+# Bazel workspace
+bazel-*
