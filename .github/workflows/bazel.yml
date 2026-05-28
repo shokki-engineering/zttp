@@ -30,4 +30,15 @@ jobs:
         run: bazel build //...
 
       - name: Test with Bazel
-        run: bazel test //...
+        # Exit code 4 means "no test targets were found", which is fine
+        # while the repo has only build targets. Any real test failure
+        # still surfaces via the other exit codes.
+        run: |
+          set +e
+          bazel test //...
+          status=$?
+          if [ $status -eq 4 ]; then
+            echo "No Bazel test targets found; skipping."
+            exit 0
+          fi
+          exit $status
