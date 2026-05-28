@@ -1,0 +1,4 @@
+exports_files([
+    "build.zig",
+    "build.zig.zon",
+])

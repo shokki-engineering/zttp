@@ -1,0 +1,44 @@
+name: Bazel CI
+
+on:
+  push:
+    branches: [main, feature/**]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.19.0
+        with:
+          bazelisk-version: 1.x
+
+      - name: Install buildifier
+        run: |
+          curl -sSL -o /usr/local/bin/buildifier \
+            https://github.com/bazelbuild/buildtools/releases/download/v8.5.1/buildifier-linux-amd64
+          chmod +x /usr/local/bin/buildifier
+
+      - name: Check Bazel formatting
+        run: buildifier --lint=warn --mode=check -r .
+
+      - name: Build with Bazel
+        run: bazel build //...
+
+      - name: Test with Bazel
+        # Exit code 4 means "no test targets were found", which is fine
+        # while the repo has only build targets. Any real test failure
+        # still surfaces via the other exit codes.
+        run: |
+          set +e
+          bazel test //...
+          status=$?
+          if [ $status -eq 4 ]; then
+            echo "No Bazel test targets found; skipping."
+            exit 0
+          fi
+          exit $status
